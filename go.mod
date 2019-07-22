@@ -1,4 +1,4 @@
-module dwt
+module github.com/monkeyWie/docker-web-terminal
 
 go 1.12
 
