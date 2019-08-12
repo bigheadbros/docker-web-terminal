@@ -65,13 +65,10 @@ func terminal(w http.ResponseWriter, r *http.Request) {
 	// 获取容器ID或name
 	container := r.Form.Get("container")
 	// 执行exec，获取到容器终端的连接
-	hr, err := exec(container)
+	hr, err := exec(container, r.Form.Get("workdir"))
 	if err != nil {
 		log.Error(err)
 		return
-	}
-	if r.Form.Get("welcome") != "" {
-		conn.WriteMessage(websocket.TextMessage, []byte(r.Form.Get("welcome")+"\r\n"))
 	}
 	// 关闭I/O流
 	defer hr.Close()
@@ -86,12 +83,13 @@ func terminal(w http.ResponseWriter, r *http.Request) {
 	wsReaderCopy(conn, hr.Conn)
 }
 
-func exec(container string) (hr types.HijackedResponse, err error) {
+func exec(container string, workdir string) (hr types.HijackedResponse, err error) {
 	// 执行/bin/bash命令
 	ir, err := cli.ContainerExecCreate(ctx, container, types.ExecConfig{
 		AttachStdin:  true,
 		AttachStdout: true,
 		AttachStderr: true,
+		WorkingDir:   workdir,
 		Cmd:          []string{"/bin/bash"},
 		Tty:          true,
 	})
