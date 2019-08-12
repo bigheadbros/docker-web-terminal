@@ -21,7 +21,7 @@ export default {
     Terminal.applyAddon(webLinks);
 
     const terminal = new Terminal();
-    const ws = new WebSocket("ws://127.0.0.1:8000/terminal?container=test");
+    const ws = new WebSocket("ws://127.0.0.1:8000/terminal?container=8c548b4285c9&welcome=Welcome+to+Alibaba+Cloud Elastic+Compute+Service+!");
     ws.onclose = function() {
       console.log("服务器关闭了连接");
     };
